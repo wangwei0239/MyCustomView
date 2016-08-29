@@ -18,7 +18,7 @@ public class PullSwitchLayout extends FrameLayout{
     private Scroller scroller;
     private boolean isShowDefaultLayer = true;
 
-    private int pxScrollTimes = 4;
+    private int pxScrollTimes = 2;
 
     public PullSwitchLayout(Context context) {
         this(context,null);
@@ -69,6 +69,23 @@ public class PullSwitchLayout extends FrameLayout{
                 System.out.println("getScrollY----------------:"+getScrollY());
 
                 int newScrollY = getScrollY() - deltaY;
+
+                if(newScrollY > 0){
+                    newScrollY = 0;
+                }else if(newScrollY < -(scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight)){
+                    newScrollY = -(scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight);
+                }
+
+                if(isShowDefaultLayer){
+                    if(newScrollY < -loadingLayerHeight){
+                        newScrollY = -loadingLayerHeight;
+                    }
+                }else {
+                    if(newScrollY > -scrollDownShowLayer.getMeasuredHeight()){
+                        newScrollY = -scrollDownShowLayer.getMeasuredHeight();
+                    }
+                }
+
                 scrollTo(0,newScrollY);
                 break;
             case MotionEvent.ACTION_UP:
