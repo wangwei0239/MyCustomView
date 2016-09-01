@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyCustomView.iml" filepath="$PROJECT_DIR$/MyCustomView.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullswitchlayerlayout/pullswitchlayerlayout.iml" filepath="$PROJECT_DIR$/pullswitchlayerlayout/pullswitchlayerlayout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/recordbtnanim/recordbtnanim.iml" filepath="$PROJECT_DIR$/recordbtnanim/recordbtnanim.iml" />
     </modules>
   </component>
 </project>

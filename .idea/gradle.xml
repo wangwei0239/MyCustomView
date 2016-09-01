@@ -10,12 +10,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pullswitchlayerlayout" />
+            <option value="$PROJECT_DIR$/recordbtnanim" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pullswitchlayerlayout" />
+            <option value="$PROJECT_DIR$/recordbtnanim" />
           </set>
         </option>
       </GradleProjectSettings>
