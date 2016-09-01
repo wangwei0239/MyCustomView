@@ -18,7 +18,7 @@ public class PullSwitchLayout extends FrameLayout{
     private Scroller scroller;
     private boolean isShowDefaultLayer = true;
 
-    private int pxScrollTimes = 2;
+    private int pxScrollTimes = 3;
 
     public PullSwitchLayout(Context context) {
         this(context,null);
@@ -66,25 +66,10 @@ public class PullSwitchLayout extends FrameLayout{
                 int deltaY = (int) (event.getY() - downY);
                 deltaY = deltaY / pxScrollTimes;
                 downY = (int) event.getY();
-                System.out.println("getScrollY----------------:"+getScrollY());
 
                 int newScrollY = getScrollY() - deltaY;
 
-                if(newScrollY > 0){
-                    newScrollY = 0;
-                }else if(newScrollY < -(scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight)){
-                    newScrollY = -(scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight);
-                }
-
-                if(isShowDefaultLayer){
-                    if(newScrollY < -loadingLayerHeight){
-                        newScrollY = -loadingLayerHeight;
-                    }
-                }else {
-                    if(newScrollY > -scrollDownShowLayer.getMeasuredHeight()){
-                        newScrollY = -scrollDownShowLayer.getMeasuredHeight();
-                    }
-                }
+                newScrollY = restrictScrollSpace(newScrollY);
 
                 scrollTo(0,newScrollY);
                 break;
@@ -97,23 +82,16 @@ public class PullSwitchLayout extends FrameLayout{
 
     public void onActionUp(MotionEvent event){
         int curScroll = -getScrollY();
-        System.out.println("Up getScrollY----------------:"+curScroll+"---loadingLayerHeight------:"+loadingLayerHeight/2);
-        System.out.println("Up Result----------------"+ (curScroll < (loadingLayerHeight / 2)));
-
         boolean result = false;
-
         if(isShowDefaultLayer){
-            result = curScroll < (loadingLayerHeight / 2);
+            result = curScroll < (loadingLayerHeight / 3 * 2);
         }else {
-            result = -getScrollY() < (scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight / 2);
+            result = -getScrollY() < (scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight / 3);
         }
-
         if(result){
             showDefaultLayer();
-            System.out.println("showDefaultLayer----------------");
         }else {
             showScrollDownLayer();
-            System.out.println("showScrollDownLayer----------------");
         }
     }
 
@@ -136,5 +114,24 @@ public class PullSwitchLayout extends FrameLayout{
             scrollTo(0,scroller.getCurrY());
             invalidate();
         }
+    }
+
+    private int restrictScrollSpace(int newScrollY){
+        if(newScrollY > 0){
+            newScrollY = 0;
+        }else if(newScrollY < -(scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight)){
+            newScrollY = -(scrollDownShowLayer.getMeasuredHeight() + loadingLayerHeight);
+        }
+
+        if(isShowDefaultLayer){
+            if(newScrollY < -loadingLayerHeight){
+                newScrollY = -loadingLayerHeight;
+            }
+        }else {
+            if(newScrollY > -scrollDownShowLayer.getMeasuredHeight()){
+                newScrollY = -scrollDownShowLayer.getMeasuredHeight();
+            }
+        }
+        return newScrollY;
     }
 }
