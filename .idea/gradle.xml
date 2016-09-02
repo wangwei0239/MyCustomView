@@ -9,6 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/musicanim" />
             <option value="$PROJECT_DIR$/pullswitchlayerlayout" />
             <option value="$PROJECT_DIR$/recordbtnanim" />
           </set>
@@ -16,6 +17,7 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/musicanim" />
             <option value="$PROJECT_DIR$/pullswitchlayerlayout" />
             <option value="$PROJECT_DIR$/recordbtnanim" />
           </set>
