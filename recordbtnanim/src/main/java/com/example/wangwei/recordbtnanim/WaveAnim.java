@@ -1,5 +1,6 @@
 package com.example.wangwei.recordbtnanim;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 /**
  * Created by Jack on 2016/9/1.
@@ -30,6 +32,8 @@ public class WaveAnim extends View{
     private int diameter = 0;
 
     private Bitmap mSrc = null;
+
+    private int angle = 0;
 
     private Paint iconCirclePaint, iconPaint;
 
@@ -53,9 +57,26 @@ public class WaveAnim extends View{
         iconCirclePaint.setColor(Color.BLUE);
         iconCirclePaint.setStyle(Paint.Style.STROKE);
         iconCirclePaint.setStrokeWidth(3);
-        iconCirclePaint.setShader(new SweepGradient(radius,radius,Color.RED,Color.TRANSPARENT));
+        iconCirclePaint.setShader(new SweepGradient(radius,radius,Color.TRANSPARENT,Color.RED));
 //        iconCirclePaint.setShader(new RadialGradient(radius,radius,insideRadius,new int[]{Color.BLUE,Color.RED},null, Shader.TileMode.REPEAT));
-        iconPaint = new Paint();
+
+    }
+
+    public void scanningAnim(){
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0,360);
+        valueAnimator.setDuration(700);
+        valueAnimator.setRepeatMode(ValueAnimator.RESTART);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                angle = (int) valueAnimator.getAnimatedValue();
+                invalidate();
+                System.out.println("angle:"+angle);
+            }
+        });
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.start();
     }
 
     @Override
@@ -66,6 +87,9 @@ public class WaveAnim extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(mSrc, (float) (radius - (mSrc.getWidth() / 2)),(float) ( radius - (mSrc.getHeight() / 2)),iconPaint);
+        canvas.save();
+        canvas.rotate(angle,radius,radius);
         canvas.drawCircle(radius, radius, insideRadius, iconCirclePaint);
+        canvas.restore();
     }
 }

@@ -6,6 +6,8 @@
     tools:context="com.example.wangwei.recordbtnanim.MainActivity">
 
     <com.example.wangwei.recordbtnanim.WaveAnim
+        android:id="@+id/wa"
+        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </RelativeLayout>
