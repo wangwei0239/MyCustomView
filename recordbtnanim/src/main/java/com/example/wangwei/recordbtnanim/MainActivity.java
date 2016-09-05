@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
         wa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                wa.startVoiceAnim();
                 wa.scanningAnim();
             }
         });

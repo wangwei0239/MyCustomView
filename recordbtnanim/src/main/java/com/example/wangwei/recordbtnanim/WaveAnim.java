@@ -17,11 +17,13 @@ import android.view.animation.LinearInterpolator;
  */
 public class WaveAnim extends View{
 
+    //----------------on draw parameter--------------------------
+
     private int backgroundRadius = 0;
 
     private int insideRadiusOffset = 10;
 
-    private int outsideRadiusOffset = 160;
+    private int outsideRadiusOffset = 60;
 
     private int radius = 0;
 
@@ -35,7 +37,25 @@ public class WaveAnim extends View{
 
     private int angle = 0;
 
-    private Paint iconCirclePaint, iconPaint;
+    private int waveRadius = 0;
+
+    private float waveAlpha = 1;
+
+    //----------------end of on draw parameter--------------------------
+
+
+
+    private Paint iconCirclePaint, iconPaint, wavePaint;
+
+    //----------------animations------------------------------
+    private ValueAnimator loadingAnim;
+    private ValueAnimator voiceAnim;
+    //----------------end of animations----------------------
+
+    //----------------view state--------------------------
+    private boolean processing = false;
+
+
 
     public WaveAnim(Context context) {
         this(context,null);
@@ -54,29 +74,67 @@ public class WaveAnim extends View{
         outsideRadius = insideRadius + outsideRadiusOffset;
         diameter = radius * 2;
         iconCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        iconCirclePaint.setColor(Color.BLUE);
+        iconCirclePaint.setColor(Color.RED);
         iconCirclePaint.setStyle(Paint.Style.STROKE);
         iconCirclePaint.setStrokeWidth(3);
+
+        wavePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        wavePaint.setColor(Color.BLUE);
+        wavePaint.setStyle(Paint.Style.STROKE);
+        wavePaint.setStrokeWidth(3);
         iconCirclePaint.setShader(new SweepGradient(radius,radius,Color.TRANSPARENT,Color.RED));
 //        iconCirclePaint.setShader(new RadialGradient(radius,radius,insideRadius,new int[]{Color.BLUE,Color.RED},null, Shader.TileMode.REPEAT));
+        initScanningAnim();
+        initVoiceAnim();
 
     }
 
-    public void scanningAnim(){
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0,360);
-        valueAnimator.setDuration(700);
-        valueAnimator.setRepeatMode(ValueAnimator.RESTART);
-        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    public void initVoiceAnim(){
+        voiceAnim = ValueAnimator.ofInt(insideRadius,outsideRadius);
+        voiceAnim.setDuration(1000);
+        voiceAnim.setRepeatCount(ValueAnimator.INFINITE);
+        voiceAnim.setRepeatMode(ValueAnimator.RESTART);
+        voiceAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                waveRadius = (int) valueAnimator.getAnimatedValue();
+                waveAlpha = 1- valueAnimator.getAnimatedFraction();
+                wavePaint.setAlpha((int) (255 * waveAlpha));
+                invalidate();
+            }
+        });
+    }
+
+    public void startVoiceAnim(){
+        voiceAnim.start();
+    }
+
+    public void initScanningAnim(){
+        loadingAnim = ValueAnimator.ofInt(0,360);
+        loadingAnim.setDuration(1400);
+        loadingAnim.setRepeatMode(ValueAnimator.RESTART);
+        loadingAnim.setRepeatCount(ValueAnimator.INFINITE);
+        loadingAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 angle = (int) valueAnimator.getAnimatedValue();
                 invalidate();
-                System.out.println("angle:"+angle);
             }
         });
-        valueAnimator.setInterpolator(new LinearInterpolator());
-        valueAnimator.start();
+        loadingAnim.setInterpolator(new LinearInterpolator());
+    }
+
+    public void scanningAnim(){
+        if(processing){
+            loadingAnim.end();
+        }else {
+            loadingAnim.start();
+        }
+        processing = !processing;
+    }
+
+    public void stopScanningAnim(){
+        loadingAnim.end();
     }
 
     @Override
@@ -87,6 +145,7 @@ public class WaveAnim extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(mSrc, (float) (radius - (mSrc.getWidth() / 2)),(float) ( radius - (mSrc.getHeight() / 2)),iconPaint);
+        canvas.drawCircle(radius,radius,waveRadius,wavePaint);
         canvas.save();
         canvas.rotate(angle,radius,radius);
         canvas.drawCircle(radius, radius, insideRadius, iconCirclePaint);
