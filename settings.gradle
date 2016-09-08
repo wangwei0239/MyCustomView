@@ -1,1 +1,1 @@
-include ':pullswitchlayerlayout', ':recordbtnanim', ':musicanim'
+include ':pullswitchlayerlayout', ':recordbtnanim', ':musicanim', ':addviewanim'
